@@ -7,7 +7,7 @@ export const Hosts = () => {
 
     useEffect(() => {
         // Aquí debes sustituir 'http://localhost:5000/hosts' por la URL de tu API
-        fetch('http://germansncompany.duckdns.org:5000/hosts')
+        fetch(import.meta.env.MONGO_URI + '/hosts')
             .then(response => response.json())
             .then(data => setHosts(data))
             .catch(err => console.error(err));

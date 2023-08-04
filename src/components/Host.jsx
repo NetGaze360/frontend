@@ -5,12 +5,12 @@ const HostContainer = styled.div`
   /* Aquí puedes agregar los estilos que necesites */
 `;
 
-const Host = ({ hostname, ip, description, chassis }) => (
+const Host = ({ hostname, ip, description, brand }) => (
   <HostContainer>
     <h2>{hostname}</h2>
     <p>{ip}</p>
     <p>{description}</p>
-    <p>{chassis}</p>
+    <p>{brand}</p>
   </HostContainer>
 );
 
