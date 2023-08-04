@@ -51,4 +51,4 @@ jobs:
           docker stop netgaze360_web || true
           docker rm netgaze360_web || true
           docker run -d --name netgaze360_web -p 8888:80 d4nieel/netgaze360_web:latest
-          echo ${{ secrets.VITE_API_URL }}
+          echo $VITE_API_URL
