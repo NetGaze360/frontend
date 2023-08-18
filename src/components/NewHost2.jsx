@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';// Asegúrate de tener tu archivo de estilos
 
 function DraggableDiv({isOpen, onClose}) {
-
-  console.log('isOpen:', isOpen);
+  
   if (!isOpen) return null;
 
   const [dragging, setDragging] = useState(false);
