@@ -5,8 +5,10 @@ import { CSS } from '@dnd-kit/utilities';
 
 // test
 const HostContainer = styled.div`
-  background-color: #fff;    color: ${(props)=>props.theme.text};
-  background: ${(props)=>props.theme.bg};  border: 1px solid #e5e5e5;
+  background-color: #fff;    
+  color: ${(props)=>props.theme.text};
+  background: ${(props)=>props.theme.bg};  
+  border: 1px solid #e5e5e5;
   border-radius: 10px;
   padding: 5px;
   margin-bottom: 5px;

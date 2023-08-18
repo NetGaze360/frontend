@@ -3,14 +3,16 @@ import styled from 'styled-components';
 import Host from '../components/Host';
 import { DndContext, closestCenter} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import NewHost2 from '../components/NewHost2';
+import { CSS } from '@dnd-kit/utilities'
 
 export const Hosts = () => {
     const [hosts, setHosts] = useState([]);
 
     useEffect(() => {
         // Aquí debes sustituir 'http://localhost:5000/hosts' por la URL de tu API
-        console.log(import.meta.env.VITE_API_URL + '/hosts');
-        fetch(import.meta.env.VITE_API_URL + '/hosts')
+        console.log(import.meta.env.VITE_API_URI);
+        fetch(import.meta.env.VITE_API_URI + '/hosts')
             .then(response => response.json())
             .then(data => setHosts(data))
             .catch(err => console.error(err));
@@ -27,6 +29,16 @@ export const Hosts = () => {
         }
     };
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openNewHost = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeNewHost = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <Container>
             <h1>Hosts</h1>
@@ -40,13 +52,12 @@ export const Hosts = () => {
                     >
                     {hosts.map(host => (
                     <Host key={host._id} {...host} />
-                    )
-                    )
-                    }
+                    ))}
                 </SortableContext>
-                
-
             </DndContext>
+            <NewHost2 className="nHost" isOpen={isModalOpen} onClose={closeNewHost}/> 
+            <button className="addHostBt"
+            onClick={openNewHost}>+</button>
         </Container>
     );
 }
@@ -56,7 +67,19 @@ const Container = styled.div`
     overflow-y: auto;
     .Host {
         margin-bottom: 10px;
-
-        
+    }
+    .addHostBt {
+        top: 90%;
+        left: 93%;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 30px;
+        background-color: #f1f1f1;
+        position: fixed;
+        border: 1px solid black;
+        border-radius: 100%;
+        cursor: pointer;
     }
 `;
