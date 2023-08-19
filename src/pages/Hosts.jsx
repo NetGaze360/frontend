@@ -5,7 +5,6 @@ import { DndContext, closestCenter} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import NewHost2 from '../components/NewHost2';
 import { CSS } from '@dnd-kit/utilities'
-
 export const Hosts = () => {
     const [hosts, setHosts] = useState([]);
 
@@ -48,19 +47,19 @@ export const Hosts = () => {
     return (
         <Container>
             <h1>Hosts</h1>
-            <DndContext
+            {/* <DndContext 
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
-            >
-                <SortableContext 
+            > */}
+{/*                 <SortableContext 
                     items={hosts.map(host => host._id)} 
                     strategy={verticalListSortingStrategy}
-                    >
+                    > */}
                     {hosts.map(host => (
-                    <Host key={host._id} {...host} />
+                    <Host key={host._id} {...host} refresh={refresh}/>
                     ))}
-                </SortableContext>
-            </DndContext>
+                {/* </SortableContext> */}
+            {/* </DndContext> */}
             <NewHost2 
                 className="nHost" 
                 isOpen={isModalOpen} 
@@ -76,21 +75,32 @@ const Container = styled.div`
     heght:100vh;
     margin-left: 30px;
     overflow-y: auto;
+    h1 {
+        color: ${(props)=>props.theme.text};
+        margin-bottom: 10px;
+        margin-top: 10px;
+        border-bottom: 1px solid ${(props)=>props.theme.bg3};
+    }
+
     .Host {
         margin-bottom: 10px;
     }
     .addHostBt {
-        top: 90%;
-        left: 93%;
+        top: 92%;
+        left: 95%;
         width: 50px;
         height: 50px;
         text-align: center;
         line-height: 50px;
         font-size: 30px;
-        background-color: #f1f1f1;
+        background-color: rgba(241, 241, 241, 0.3);;
         position: fixed;
         border: 1px solid black;
         border-radius: 100%;
         cursor: pointer;
+        box-shadow: 10px 10px 15px rgba(0,0,0,0.4);
+    }
+    .addHostBt:hover {
+        background-color: rgba(47, 76, 204, 0.4);;
     }
 `;
