@@ -9,11 +9,4 @@ export default defineConfig({
       usePolling: true,
     }
   },
-  define: {
-    'process.env': {
-      VITE_API_URI: process.env.ENVIRONMENT === 'production'
-        ? import.meta.env.VITE_API_URI
-        : process.env.VITE_API_URI
-    }
-  }
 })

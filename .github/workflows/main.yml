@@ -22,8 +22,6 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
-      env:
-        VITE_API_URI: ${{ secrets.VITE_API_URL }}
 
     - name: Login to Docker Hub
       uses: docker/login-action@v2
@@ -35,6 +33,8 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
+        build-args: |
+          VITE_API_URI=${{ secrets.VITE_API_URL }}
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/netgaze360_web:latest
 
