@@ -1,12 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';// Asegúrate de tener tu archivo de estilos
 
 function DraggableDiv({isOpen, onClose}) {
-  
+
   if (!isOpen) return null;
 
+  const [isVisible, setIsVisible] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [position, setPosition] = useState({ left: 500, top: 500 });
+  const containerRef = useRef(null);
+  const [position, setPosition] = useState({ left: null, top: null });
+
+  useEffect(() => {
+    // Calcular las dimensiones de la ventana
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // Calcular la posición inicial para que esté en el centro
+    const initialLeft = (windowWidth - containerRef.current.offsetWidth) / 2;
+    const initialTop = (windowHeight - containerRef.current.offsetHeight) / 2;
+
+    // Establecer la posición inicial
+    setPosition({ left: initialLeft, top: initialTop });
+
+    setIsVisible(true);
+  }, []);
 
   function handleDrag(event) {
     if (dragging) {
@@ -19,14 +36,21 @@ function DraggableDiv({isOpen, onClose}) {
   }
 
   return (
-    <Container style={{ left: `${position.left}px`, top: `${position.top}px` }}>
+    <Container 
+      ref={containerRef}
+      style={{ 
+        left: `${position.left}px`, 
+        top: `${position.top}px`,
+        visibility: isVisible ? 'visible' : 'hidden'
+    }}
+    >
       <header
         className={dragging ? 'active' : ''}
         onMouseDown={() => setDragging(true)}
         onMouseMove={handleDrag}
         onMouseUp={() => setDragging(false)}
       >
-        Draggable Div
+        Add Host
       </header>
       <form>
         <div className="form-group">
@@ -53,8 +77,8 @@ function DraggableDiv({isOpen, onClose}) {
         </div>
       </form>
       <div className='btDiv'>
-        <button>Aceptar</button>
-        <button className="modal-cancel-button" onClick={onClose}>
+        <button id='btAccept'>Aceptar</button>
+        <button id='btCancel' className="modal-cancel-button" onClick={onClose}>
           Cancelar
         </button>
       </div>
@@ -65,20 +89,25 @@ function DraggableDiv({isOpen, onClose}) {
 export default DraggableDiv;
 
 const Container = styled.div`
+    place-items: center;
     position: absolute;
-    width: 20%;
-    height: 60%;
+    width: 300px;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     background-color: ${(props)=>props.theme.bg};    
     color: ${(props)=>props.theme.text};
     border: 1px solid #e5e5e5;
     border-radius: 10px;
     box-shadow: 10px 10px 15px rgba(0,0,0,0.1);
+    overflow: auto;
 
     header{
       font-size: 23px;
       font-weight: 500;
       padding: 17px 30px;
       border-bottom: 1px solid #ccc;
+      cursor: pointer;
     }
 
     header.active{
@@ -86,9 +115,30 @@ const Container = styled.div`
       user-select: none;
     }
 
-    .form-group label,
-    .form-group input {
+    form{
+      display: flex;
+      margin-left: 20px;
+      margin-top: 10px;
+      margin-bottom: 35px;
+    }
+  
+
+    .form-group{
+      justify-content: ;
+      align-items: center;
+
+
+    }
+
+    .form-group label{
       width: 50%;
+      display: block;
+      margin-bottom: 5px;
+      margin-left: 10px;
+      border-radius: 4px;
+    }
+    .form-group input {
+      width: 100%;
       display: block;
       margin-bottom: 5px;
       margin-left: 10px;
@@ -98,6 +148,38 @@ const Container = styled.div`
     .btDiv{
       display: flex;
       justify-content: space-around;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    button{
+      width: auto;
+      text-align: center;
+      line-height: 30px;
+      font-size: 15px;
+      padding: 0 10px;
+      height: 30px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #btAccept{
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #btAccept:hover{
+      background-color: #45a049;
+    }
+
+    #btCancel{
+      background-color: #f44336;
+      color: white;
+    }
+
+    #btCancel:hover{
+      background-color: #da190b;
     }
 
     
