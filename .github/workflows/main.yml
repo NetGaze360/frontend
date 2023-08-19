@@ -33,8 +33,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        build-args: |
-          VITE_API_URI=${{ secrets.VITE_API_URL }}
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/netgaze360_web:latest
 
