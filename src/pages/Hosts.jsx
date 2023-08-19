@@ -10,7 +10,6 @@ export const Hosts = () => {
     const [hosts, setHosts] = useState([]);
 
     useEffect(() => {
-        // Aquí debes sustituir 'http://localhost:5000/hosts' por la URL de tu API
         console.log(import.meta.env.VITE_API_URI);
         fetch(import.meta.env.VITE_API_URI + '/hosts')
             .then(response => response.json())
@@ -39,6 +38,13 @@ export const Hosts = () => {
         setIsModalOpen(false);
     };
 
+    const refresh = () => {
+        fetch(import.meta.env.VITE_API_URI + '/hosts')
+            .then(response => response.json())
+            .then(data => setHosts(data))
+            .catch(err => console.error(err));
+    };
+
     return (
         <Container>
             <h1>Hosts</h1>
@@ -55,7 +61,12 @@ export const Hosts = () => {
                     ))}
                 </SortableContext>
             </DndContext>
-            <NewHost2 className="nHost" isOpen={isModalOpen} onClose={closeNewHost}/> 
+            <NewHost2 
+                className="nHost" 
+                isOpen={isModalOpen} 
+                onClose={closeNewHost} 
+                refresh={refresh}
+            /> 
             <button className="addHostBt"
             onClick={openNewHost}>+</button>
         </Container>

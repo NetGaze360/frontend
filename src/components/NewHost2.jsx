@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';// Asegúrate de tener tu archivo de estilos
 
-function DraggableDiv({isOpen, onClose}) {
+function DraggableDiv({isOpen, onClose, refresh}) {
 
   if (!isOpen) return null;
 
@@ -34,6 +34,34 @@ function DraggableDiv({isOpen, onClose}) {
       }));
     }
   }
+
+  const handleCreateHost = () => {
+    console.log('Creating host...');
+    const newHostData = {
+      hostname: document.getElementById('name').value,
+      ip: document.getElementById('ip').value,
+      description: document.getElementById('description').value,
+      brand: document.getElementById('brand').value,
+      model: document.getElementById('model').value,
+      serial: document.getElementById('serial').value,
+      location: document.getElementById('location').value
+    };
+
+    fetch(import.meta.env.VITE_API_URI + '/hosts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newHostData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        onClose();
+        refresh();
+      })
+      .catch(err => console.error(err));
+  };
 
   return (
     <Container 
@@ -77,7 +105,7 @@ function DraggableDiv({isOpen, onClose}) {
         </div>
       </form>
       <div className='btDiv'>
-        <button id='btAccept'>Aceptar</button>
+        <button id='btAccept' onClick={handleCreateHost}>Aceptar</button>
         <button id='btCancel' className="modal-cancel-button" onClick={onClose}>
           Cancelar
         </button>
