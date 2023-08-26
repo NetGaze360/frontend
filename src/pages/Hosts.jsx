@@ -46,7 +46,6 @@ export const Hosts = () => {
 
     return (
         <Container>
-            <h1>Hosts</h1>
             {/* <DndContext 
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
@@ -60,27 +59,21 @@ export const Hosts = () => {
                     ))}
                 {/* </SortableContext> */}
             {/* </DndContext> */}
-            <NewHost2 
-                className="nHost" 
-                isOpen={isModalOpen} 
-                onClose={closeNewHost} 
-                refresh={refresh}
-            /> 
+            {isModalOpen && (
+                <NewHost2 
+                    className="nHost" 
+                    isOpen={isModalOpen} 
+                    onClose={closeNewHost} 
+                    refresh={refresh}
+                /> 
+            )}
+
             <button className="addHostBt"
             onClick={openNewHost}>+</button>
         </Container>
     );
 }
 const Container = styled.div`
-    heght:100vh;
-    margin-left: 30px;
-    overflow-y: auto;
-    h1 {
-        color: ${(props)=>props.theme.text};
-        margin-bottom: 10px;
-        margin-top: 10px;
-        border-bottom: 1px solid ${(props)=>props.theme.bg3};
-    }
 
     .Host {
         margin-bottom: 10px;

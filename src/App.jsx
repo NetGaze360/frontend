@@ -14,6 +14,7 @@ function App() {
   const themeStyle = theme === "light" ? Light : Dark;
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [page, setPage] = useState("Home");
 
   return (
     <>
@@ -21,8 +22,15 @@ function App() {
       <ThemeProvider theme={themeStyle}>
         <BrowserRouter>
           <Container className={sidebarOpen?"sidebarState active":""}>
-            <Sidebar sidebarOpen = {sidebarOpen} setSidebarOpen={setSidebarOpen}/>   
-            <MyRoutes/>
+            <Sidebar sidebarOpen = {sidebarOpen} setSidebarOpen={setSidebarOpen} setPage = {setPage}/>   
+            <div className='content'>
+              <div className='header'>
+                <h1>Hosts</h1>
+              </div>
+              <div className='body'>
+                <MyRoutes/>
+              </div>
+            </div>
           </Container>
         </BrowserRouter>
       </ThemeProvider>
@@ -38,13 +46,35 @@ const Container = styled.div`
   top: 0;
   height: 100vh;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
   background: ${({theme})=>theme.bgtotal};
   transition: all 0.3s;
   &.active{
     grid-template-columns: 300px auto;
   }
   color: ${({theme})=>theme.text};
+
+  .content{
+    margin-bottom: 500px;
+  }
+  
+  .header{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: ${({theme})=>theme.bgtotal};
+    color: ${(props)=>props.theme.text};
+    margin-left: 30px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-bottom: 1px solid ${(props)=>props.theme.bg3};
+  }
+
+  .body{
+    margin-left: 30px;
+    overflow-y: auto;
+    max-height: calc(100vh - 50px); /* Ajusta esta altura según tus necesidades */
+  }
 `;
 
 export default App

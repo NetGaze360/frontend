@@ -4,10 +4,14 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import {FaRegTrashAlt} from 'react-icons/fa';
 import {BiEdit} from 'react-icons/bi';
+import { useState } from 'react';
+import NewHost2 from '../components/NewHost2';
 
 const Host = ({ _id, hostname, ip, description, brand, refresh }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({id: _id});
   
+  const [isEditing, setIsEditing] = useState(false);
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -15,14 +19,15 @@ const Host = ({ _id, hostname, ip, description, brand, refresh }) => {
 
   const handleEdit = () => {
     console.log('Editando');
+    setIsEditing(true);
   };
   
-  const handleDelete = () => {
+  const handleDelete = async () => {
     console.log('Eliminando');
-    fetch(import.meta.env.VITE_API_URI + '/hosts/' + _id, {
+    await fetch(import.meta.env.VITE_API_URI + '/hosts/' + _id, {
       method: 'DELETE'
     })
-    refresh();
+    await refresh();
   };
 
   return (
@@ -47,6 +52,15 @@ const Host = ({ _id, hostname, ip, description, brand, refresh }) => {
             <FaRegTrashAlt size={25}/>
           </div>
       </div>
+      {isEditing && (
+        <NewHost2
+          isOpen={isEditing}
+          onClose={() => setIsEditing(false)}
+          refresh={refresh}
+          // Aquí pasa los datos del host seleccionado para prellenar el formulario
+          initialData={{ _id, hostname, ip, description, brand }}
+        />
+      )}
 
 
     </HostContainer>
@@ -65,7 +79,7 @@ const HostContainer = styled.div`
   border: 1px solid #e5e5e5;
   border-radius: 10px;
   padding: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   width: 95%;
   
   .hostDiv {

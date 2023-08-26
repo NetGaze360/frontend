@@ -3,11 +3,12 @@ import logo from '../assets/lblue_lgNetGaze.png';
 import {v} from '../styles/Variables';
 import {AiOutlineLeft, AiOutlineHome, AiOutlineApartment, AiOutlineSetting} from 'react-icons/ai';
 import {MdOutlineAnalytics, MdLogout} from 'react-icons/md';
+import {FiServer} from 'react-icons/fi';
 import {NavLink, useLocation} from 'react-router-dom';
 import { useContext } from "react";
 import { ThemeContext } from '../App';
 
-export function Sidebar({sidebarOpen, setSidebarOpen} ){
+export function Sidebar({sidebarOpen, setSidebarOpen, setPage} ){
 
     const ModSidebaropen=() =>{
         setSidebarOpen(!sidebarOpen);
@@ -96,13 +97,13 @@ const linksArray = [
     },
     {
         label: 'Hosts',
-        icon: <AiOutlineApartment/>,
+        icon: <FiServer/>,
         to: '/hosts',
     },
     {
-        label: 'Estadisticas',
-        icon: <MdOutlineAnalytics/>,
-        to: '/estadisticas',
+        label: 'Switches',
+        icon: <AiOutlineApartment/>,
+        to: '/switches',
     },
 ]
 

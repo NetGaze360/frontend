@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';// Asegúrate de tener tu archivo de estilos
 
-function DraggableDiv({isOpen, onClose, refresh}) {
-
-  if (!isOpen) return null;
+function DraggableDiv({isOpen, onClose, refresh, initialData}) {
 
   const [isVisible, setIsVisible] = useState(false);
   const [dragging, setDragging] = useState(false);
   const containerRef = useRef(null);
   const [position, setPosition] = useState({ left: null, top: null });
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     // Calcular las dimensiones de la ventana
@@ -23,7 +22,17 @@ function DraggableDiv({isOpen, onClose, refresh}) {
     setPosition({ left: initialLeft, top: initialTop });
 
     setIsVisible(true);
-  }, []);
+
+    // Establece los valores iniciales de los campos del formulario al editar
+    if (initialData) {
+      setIsEditing(true);
+      document.getElementById('name').value = initialData.hostname;
+      document.getElementById('ip').value = initialData.ip;
+      document.getElementById('description').value = initialData.description;
+      document.getElementById('brand').value = initialData.brand;
+    }
+
+  }, [initialData]);
 
   function handleDrag(event) {
     if (dragging) {
@@ -36,7 +45,6 @@ function DraggableDiv({isOpen, onClose, refresh}) {
   }
 
   const handleCreateHost = () => {
-    console.log('Creating host...');
     const newHostData = {
       hostname: document.getElementById('name').value,
       ip: document.getElementById('ip').value,
@@ -44,23 +52,40 @@ function DraggableDiv({isOpen, onClose, refresh}) {
       brand: document.getElementById('brand').value,
       model: document.getElementById('model').value,
       serial: document.getElementById('serial').value,
-      location: document.getElementById('location').value
+      location: document.getElementById('location').value,
     };
-
-    fetch(import.meta.env.VITE_API_URI + '/hosts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newHostData)
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        onClose();
-        refresh();
+  
+    if (isEditing) {
+      fetch(import.meta.env.VITE_API_URI + '/hosts/' + initialData._id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newHostData),
       })
-      .catch(err => console.error(err));
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          onClose();
+          refresh();
+        })
+        .catch(err => console.error(err));
+    } else {
+      fetch(import.meta.env.VITE_API_URI + '/hosts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newHostData),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          onClose();
+          refresh();
+        })
+        .catch(err => console.error(err));
+    }
   };
 
   return (
