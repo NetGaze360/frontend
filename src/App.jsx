@@ -25,7 +25,7 @@ function App() {
             <Sidebar sidebarOpen = {sidebarOpen} setSidebarOpen={setSidebarOpen} setPage = {setPage}/>   
             <div className='content'>
               <div className='header'>
-                <h1>Hosts</h1>
+                <h1>{page}</h1>
               </div>
               <div className='body'>
                 <MyRoutes/>

@@ -36,7 +36,9 @@ return (
         </div>
             {linksArray.map(({icon, label, to}) => (
                 <div className='LinkContainer' key={label}>
-                    <NavLink to={to} className = {({isActive}) => `Links${isActive?` active`:``}`}>
+                    <NavLink to={to} className = {({isActive}) => `Links${isActive?` active`:``}`}
+                        onClick={()=>setPage(label)}
+                    >
                         <div className='Linkicon'>
                             {icon}
                         </div>
