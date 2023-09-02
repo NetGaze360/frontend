@@ -13,7 +13,7 @@ function App() {
   const [theme, setTheme] = useState("light");
   const themeStyle = theme === "light" ? Light : Dark;
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [page, setPage] = useState("Home");
 
   return (
@@ -57,7 +57,7 @@ const Container = styled.div`
   .content{
     margin-bottom: 500px;
   }
-  
+
   .header{
     position: sticky;
     top: 0;
