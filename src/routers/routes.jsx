@@ -11,7 +11,7 @@ export function MyRoutes() {
             <Route path="/" element={<Home/>}/>
             <Route path="/hosts" element={<Hosts/>}/>
             <Route path="/switches" element={<Switches/>}/>
-            <Route path="/switches/:id" element={<Switch/>}/>
+            <Route path="/switches/:id" element={<SwitchLayout/>}/>
         </Routes>
     );
 }

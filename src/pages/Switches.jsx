@@ -35,7 +35,7 @@ export const Switches = () => {
     };
 
     const refresh = () => {
-        fetch(import.meta.env.VITE_API_URI + '/siwtches')
+        fetch(import.meta.env.VITE_API_URI + '/switches')
             .then(response => response.json())
             .then(data => setSwitches(data))
             .catch(err => console.error(err));
