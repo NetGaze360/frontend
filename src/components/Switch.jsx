@@ -5,9 +5,9 @@ import { CSS } from '@dnd-kit/utilities';
 import {FaRegTrashAlt} from 'react-icons/fa';
 import {BiEdit} from 'react-icons/bi';
 import { useState } from 'react';
-import NewHost2 from './NewHost2';
+import NewSwitch from './NewSwitch';
 
-const Host = ({ _id, hostname, ip, description, brand, refresh }) => {
+const Switch = ({ _id, name, description, brand, nports, nconnections, refresh }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({id: _id});
   
   const [isEditing, setIsEditing] = useState(false);
@@ -24,7 +24,7 @@ const Host = ({ _id, hostname, ip, description, brand, refresh }) => {
   
   const handleDelete = async () => {
     console.log('Eliminando');
-    await fetch(import.meta.env.VITE_API_URI + '/hosts/' + _id, {
+    await fetch(import.meta.env.VITE_API_URI + '/switches/' + _id, {
       method: 'DELETE'
     })
     await refresh();
@@ -32,19 +32,20 @@ const Host = ({ _id, hostname, ip, description, brand, refresh }) => {
 
   return (
 
-    <HostContainer ref={setNodeRef} style={style}
+    <SwitchContainer ref={setNodeRef} style={style}
       {...listeners}
       {...attributes}
       >
-      <div className='hostDiv'>
-        <h2>{hostname}</h2>
-        <div className='hostInfo'>
-          <p>{ip}</p>
+      <div className='switchDiv'>
+        <h2>{name}</h2>
+        <div className='switchInfo'>
           <p>{description}</p>
           <p>{brand}</p>
+          <p>{nports}</p>
+          <p>{nconnections}</p>
         </div>
       </div>
-      <div className='hostButtons'>
+      <div className='switchButtons'>
           <div className='editBt' onClick={handleEdit}>
             <BiEdit size={30}/>
           </div>
@@ -53,23 +54,23 @@ const Host = ({ _id, hostname, ip, description, brand, refresh }) => {
           </div>
       </div>
       {isEditing && (
-        <NewHost2
+        <NewSwitch
           isOpen={isEditing}
           onClose={() => setIsEditing(false)}
           refresh={refresh}
-          // Aquí pasa los datos del host seleccionado para prellenar el formulario
-          initialData={{ _id, hostname, ip, description, brand }}
+          // Aquí pasa los datos del seleccionado seleccionado para prellenar el formulario
+          initialData={{ _id, name, description, brand, nports, nconnections }}
         />
       )}
 
 
-    </HostContainer>
+    </SwitchContainer>
   );
 };
 
-export default Host;
+export default Switch;
 
-const HostContainer = styled.div`
+const SwitchContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -82,14 +83,14 @@ const HostContainer = styled.div`
   margin-bottom: 10px;
   width: 95%;
   
-  .hostDiv {
+  .switchDiv {
     justify-content: space-between;
     margin-right: 50px;
   }
-  .hostInfo {
+  .switchInfo {
     margin-left: 10px;
   }
-  .hostButtons {
+  .switchButtons {
     margin-right: 30px;
   }
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Switch from '../components/Switch';
 import { DndContext, closestCenter} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import NewHost2 from '../components/NewHost2';
+import NewSwitch from '../components/NewSwitch';
 import { CSS } from '@dnd-kit/utilities'
 export const Switches = () => {
     const [switches, setSwitches] = useState([]);
@@ -43,21 +43,11 @@ export const Switches = () => {
 
     return (
         <Container>
-            {/* <DndContext 
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-            > */}
-{/*                 <SortableContext 
-                    items={hosts.map(host => host._id)} 
-                    strategy={verticalListSortingStrategy}
-                    > */}
-                    {switches.map(switchItem => (
-                    <Switch key={switches._id} {...switches} refresh={refresh}/>
-                    ))}
-                {/* </SortableContext> */}
-            {/* </DndContext> */}
+            {switches.map(switchItem => (
+                <Switch key={switchItem._id} {...switchItem} refresh={refresh}/>
+            ))}
             {isModalOpen && (
-                <NewHost2 
+                <NewSwitch
                     className="nSwitch" 
                     isOpen={isModalOpen} 
                     onClose={closeNewSwitch} 
