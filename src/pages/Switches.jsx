@@ -5,24 +5,18 @@ import { DndContext, closestCenter} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import NewSwitch from '../components/NewSwitch';
 import { CSS } from '@dnd-kit/utilities'
+import { Link } from 'react-router-dom';
+
 export const Switches = () => {
     const [switches, setSwitches] = useState([]);
 
     useEffect(() => {
         console.log(import.meta.env.VITE_API_URI);
         refresh();
+        switches.forEach((switchItem, index) => {
+            console.log(switchItem.nports);
+        });
     }, []); // El array vacío significa que este efecto se ejecutará sólo una vez, justo después de que el componente se monte
-
-    const handleDragEnd = (event) => {
-        const {over, active} = event;
-        if (over && active.id !== over.id) {
-            const overIndex = switches.findIndex(switchItem => switchItem._id === over.id);
-            const activeIndex = switches.findIndex(switchItem => switchItem._id === active.id);
-            const newSwitch = [...switches];
-            newSwitch.splice(overIndex, 0, newSwitch.splice(activeIndex, 1)[0]);
-            setSwitches(newSwitch);
-        }
-    };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,7 +38,9 @@ export const Switches = () => {
     return (
         <Container>
             {switches.map(switchItem => (
-                <Switch key={switchItem._id} {...switchItem} refresh={refresh}/>
+                <Link to={`/switches/${switchItem._id}`} key={switchItem._id} >
+                    <Switch key={switchItem._id} {...switchItem} refresh={refresh}/>
+                </Link>
             ))}
             {isModalOpen && (
                 <NewSwitch
@@ -83,4 +79,9 @@ const Container = styled.div`
     .addSwitchtBt:hover {
         background-color: rgba(47, 76, 204, 0.4);;
     }
+
+    a {
+        text-decoration: none; /* Elimina la decoración de texto predeterminada */
+        color: inherit; /* Utiliza el color de texto heredado */
+      }
 `;
