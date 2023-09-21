@@ -7,10 +7,10 @@ const EvenConnection = ({ connection }) => {
   return (
     <Container>
       <div className="even-connection">
-        <div className='col'>{connection.ip}</div>
-        <div className='col'>{connection.vlan}</div>
-        <div className='col'>{connection.hostname}</div>
-        <div className='col'>{connection.swPort}</div>
+      <div className='col' id='hostname'>{connection.hostname}</div>
+        <div className='col' id='ip'>{connection.ip}</div>
+        <div className='col' id='vlan'>{connection.vlan}</div>
+        <div className='col' id='port'>{connection.swPort}</div>
       </div>
     </Container>
   );
@@ -31,15 +31,35 @@ const Container = styled.div`
     
   .even-connection {
     display: flex;
-    width: 50%; /* Cambiar el ancho al 50% para ocupar la mitad del contenedor padre */
     justify-content: space-between;
     align-items: center; /* Alinea verticalmente al centro */
   }
   .col {
     margin-right: 5px;
-    padding-right: 5px;
-    border-right: 1px solid #e5e5e5;
-    width: 33.33%; /* Cambiar el ancho al 33.33% para dividir en tres columnas */
+    margin-left: 5px;
+    padding-left: 5px;
+    border-left: 1px solid #e5e5e5;
     text-align: center;
+  }
+  
+  #port {
+    width: 10%;
+    max-width: 30px;
+  }
+  
+  #ip {
+    width: 30%;
+    min-width: 100px;
+  }
+  
+  #vlan {
+    width: 10%;
+  }
+  
+  #hostname {
+    width: 50%;
+    min width: 100px;
+    
+    border-left: none;
   }
 `;
