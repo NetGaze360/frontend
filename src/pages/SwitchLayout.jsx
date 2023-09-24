@@ -2,9 +2,10 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { EvenConnection } from '../components/EvenConnection';
 import { OddConnection } from '../components/OddConnection';
+import { Connection} from '../components/Connection';
 import { useEffect, useState } from 'react';
 
-export function SwitchLayout(){
+export function SwitchLayout({setPage}){
     const { id } = useParams();
     const [dataLoaded, setDataLoaded] = useState(false);
     const [switchInfo, setSwitchInfo] = useState({});
@@ -14,12 +15,16 @@ export function SwitchLayout(){
     useEffect(() => {
         //getSwitchInfo();
         getConns();
+        getSwitchInfo();
     }, []); // El array vacío significa que este efecto se ejecutará sólo una vez, justo después de que el componente se monte
 
     const getSwitchInfo = () => {
         fetch(import.meta.env.VITE_API_URI + '/switches/' + id)
             .then(response => response.json())
-            .then(data => setSwitchInfo(data))
+            .then(data => {
+                setSwitchInfo(data)
+
+            })
             .catch(err => console.error(err));
     };
 
@@ -28,9 +33,6 @@ export function SwitchLayout(){
         fetch(import.meta.env.VITE_API_URI + '/conns/' + id)
             .then(response => response.json())
             .then(data => {
-                console.log("API Response Data:", data);
-                console.log("Even Connections:", data.evenConns);
-                console.log("Odd Connections:", data.oddConns);
                 setEvenConns(data.evenConns)
                 setOddConns(data.oddConns)
                 setDataLoaded(true)
@@ -40,22 +42,22 @@ export function SwitchLayout(){
 
     return (
         <Container>
-            <h1>${id} Layout</h1>
             {dataLoaded ? (
                 <>
                 {/* Muestra las conexiones */}
+                { setPage(switchInfo.name)}
                 <div className="conns">
                     <div className="connections-even">
                         {evenConns && evenConns.map(evenConn => (
-                            <div key={evenConn}>
-                                <EvenConnection connection={evenConn} />
+                            <div key={evenConn.swPort}>
+                                <Connection connection={evenConn} />
                             </div>
                         ))}
                     </div>
                     <div className="connections-odd">
                         {oddConns && oddConns.map(oddConn => (
                             <div key={oddConn.swPort}>
-                                <OddConnection connection={oddConn} />
+                                <Connection connection={oddConn} />
                             </div>
                         ))}
                     </div>
@@ -67,6 +69,7 @@ export function SwitchLayout(){
         </Container>);
 }
 const Container = styled.div`
+    margin-right: 25px;
     .conns {
         display: flex;
         flex-direction: row;

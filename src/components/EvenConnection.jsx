@@ -7,7 +7,7 @@ const EvenConnection = ({ connection }) => {
   return (
     <Container>
       <div className="even-connection">
-      <div className='col' id='hostname'>{connection.hostname}</div>
+        <div className='col' id='hostname'>{connection.hostname}</div>
         <div className='col' id='ip'>{connection.ip}</div>
         <div className='col' id='vlan'>{connection.vlan}</div>
         <div className='col' id='port'>{connection.swPort}</div>
@@ -21,6 +21,7 @@ export { EvenConnection };
 const Container = styled.div`
     top: 0%;
     left: 0%;
+    padding: 2px;
     border: 1px solid #e5e5e5;
     border-radius: 5px;
     margin: 5px;

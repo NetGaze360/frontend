@@ -28,7 +28,7 @@ function App() {
                 <h1>{page}</h1>
               </div>
               <div className='body'>
-                <MyRoutes/>
+                <MyRoutes setPage = {setPage}/>
               </div>
             </div>
           </Container>

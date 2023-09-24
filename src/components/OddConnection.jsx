@@ -7,7 +7,7 @@ const OddConnection = ({ connection }) => {
   return (
     <Container>
       <div className="odd-connection">
-      <div className='col' id='port'>{connection.swPort}</div>
+        <div className='col' id='port'>{connection.swPort}</div>
         <div className='col'id = 'ip'>{connection.ip}</div>
         <div className='col' id='vlan'>{connection.vlan}</div>
         <div className='col' id='hostname'>{connection.hostname}</div>
@@ -21,6 +21,7 @@ export { OddConnection };
 const Container = styled.div`
 top: 50%;
 left: 50%;
+padding: 2px;
 border: 1px solid #e5e5e5;
 border-radius: 5px;
 margin: 5px;
