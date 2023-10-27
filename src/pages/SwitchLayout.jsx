@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { EvenConnection } from '../components/EvenConnection';
-import { OddConnection } from '../components/OddConnection';
 import { Connection} from '../components/Connection';
 import { useEffect, useState } from 'react';
 
