@@ -69,7 +69,9 @@ export function SwitchLayout({setPage}){
         </Container>);
 }
 const Container = styled.div`
+    display: flex;
     margin-right: 25px;
+    margin-bottom: 40px;
     .conns {
         display: flex;
         flex-direction: row;

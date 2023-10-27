@@ -44,6 +44,20 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
     }
   }
 
+  useEffect(() => {
+    if (dragging) {
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+  
+    return () => window.removeEventListener('mouseup', handleMouseUp);
+  }, [dragging]);
+
+  function handleMouseUp() {
+    setDragging(false);
+  }
+
   const handleCreateHost = () => {
     const newHostData = {
       hostname: document.getElementById('name').value,
@@ -101,7 +115,6 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
         className={dragging ? 'active' : ''}
         onMouseDown={() => setDragging(true)}
         onMouseMove={handleDrag}
-        onMouseUp={() => setDragging(false)}
       >
         Add Host
       </header>
@@ -160,11 +173,11 @@ const Container = styled.div`
       font-weight: 500;
       padding: 17px 30px;
       border-bottom: 1px solid #ccc;
-      cursor: pointer;
+      cursor: grab;
     }
 
     header.active{
-      cursor: move;
+      cursor: grabbing;
       user-select: none;
     }
 

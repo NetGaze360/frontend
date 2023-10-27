@@ -5,6 +5,8 @@ import { DndContext, closestCenter} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import NewHost2 from '../components/NewHost2';
 import { CSS } from '@dnd-kit/utilities'
+import { AiOutlineSearch } from 'react-icons/ai';
+
 export const Hosts = () => {
     const [hosts, setHosts] = useState([]);
 
@@ -26,6 +28,19 @@ export const Hosts = () => {
             setHosts(newHosts);
         }
     };
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        console.log(value);
+        fetch(import.meta.env.VITE_API_URI + '/hosts?search=' + value)
+            .then(response => response.json())
+            .then(data => {
+                setHosts(data)
+                console.log(data);
+            })
+            .catch(err => console.error(err));
+    };
+    
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -54,9 +69,16 @@ export const Hosts = () => {
                     items={hosts.map(host => host._id)} 
                     strategy={verticalListSortingStrategy}
                     > */}
-                    {hosts.map(host => (
-                    <Host key={host._id} {...host} refresh={refresh}/>
-                    ))}
+                    <div className="filter">
+                        <AiOutlineSearch className= "search_icon" size={20} />
+                        <input type="text" placeholder="Buscar..." onChange={handleSearchChange} />
+                    </div>
+                    <div className='hosts'>
+                        {hosts.map(host => (
+                        <Host key={host._id} {...host} refresh={refresh}/>
+                        ))}
+                    </div>
+
                 {/* </SortableContext> */}
             {/* </DndContext> */}
             {isModalOpen && (
@@ -75,9 +97,12 @@ export const Hosts = () => {
 }
 const Container = styled.div`
 
+    position: relative;
+    padding-top: 40px;
     .Host {
         margin-bottom: 10px;
     }
+
     .addHostBt {
         top: 92%;
         left: 95%;
@@ -95,5 +120,21 @@ const Container = styled.div`
     }
     .addHostBt:hover {
         background-color: rgba(47, 76, 204, 0.4);;
+    }
+
+    .filter {
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 10%;
+        margin-top: 5px;
+        margin-bottom: 10px;
+
+        .search_icon {
+            margin-right: 5px;
+        }
     }
 `;

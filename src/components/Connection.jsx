@@ -35,7 +35,7 @@ export { Connection };
 
 const Container = styled.div`
 padding: 2px;
-border: 1px solid #e5e5e5;
+border: 1px solid ${(props)=>props.theme.gray600};
 border-radius: 5px;
 margin: 5px;
 weight: 100%;
@@ -52,7 +52,7 @@ background: ${(props)=>props.theme.bg};
   margin-right: 5px;
   margin-left: 5px;
   padding-right: 5px;
-  border-right: 1px solid #e5e5e5;
+  border-right: 1px solid ${(props)=>props.theme.gray600};
   text-align: center;
   align-items: center;
 }
@@ -61,7 +61,7 @@ background: ${(props)=>props.theme.bg};
   margin-right: 5px;
   margin-left: 5px;
   padding-left: 5px;
-  border-left: 1px solid #e5e5e5;
+  border-left: 1px solid ${(props)=>props.theme.gray600};
   text-align: center;
   align-items: center;
 }
