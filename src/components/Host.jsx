@@ -57,7 +57,6 @@ const Host = ({ _id, hostname, ip, description, brand, refresh }) => {
           isOpen={isEditing}
           onClose={() => setIsEditing(false)}
           refresh={refresh}
-          // Aquí pasa los datos del host seleccionado para prellenar el formulario
           initialData={{ _id, hostname, ip, description, brand }}
         />
       )}
