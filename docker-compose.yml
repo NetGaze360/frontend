@@ -5,5 +5,5 @@ services:
     build: .
     container_name: ng360-frontend
     ports:
-      - "80:8080"
+      - "8080:80"
     network_mode: "ng360-network"
