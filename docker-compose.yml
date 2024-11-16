@@ -1,6 +1,6 @@
 # docker-compose.frontend.yml
 services:
-  Ng360-frontend:
+  ng360-frontend:
     image: ng360-frontend
     build: .
     container_name: ng360-frontend
