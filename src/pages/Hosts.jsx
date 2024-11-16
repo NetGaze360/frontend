@@ -99,6 +99,7 @@ const Container = styled.div`
 
     position: relative;
     padding-top: 40px;
+    height: 100%;
     .Host {
         margin-bottom: 10px;
     }
@@ -136,5 +137,13 @@ const Container = styled.div`
         .search_icon {
             margin-right: 5px;
         }
+    }
+    .hosts {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        height: 100%;
     }
 `;

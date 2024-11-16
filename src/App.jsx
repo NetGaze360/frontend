@@ -56,6 +56,7 @@ const Container = styled.div`
 
   .content{
     margin-bottom: 500px;
+    height: 100%;
   }
 
   .header{
@@ -73,6 +74,7 @@ const Container = styled.div`
   .body{
     margin-left: 30px;
     overflow-y: auto;
+    height: 100%;
     max-height: calc(100vh - 50px); /* Ajusta esta altura según tus necesidades */
   }
 `;
