@@ -4,6 +4,8 @@ import Host from '../components/Host';
 import { DndContext, closestCenter} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import NewHost2 from '../components/NewHost2';
+import Layout from '../components/Layout';
+import SearchBar from '../components/SearchBar';
 import { CSS } from '@dnd-kit/utilities'
 import { AiOutlineSearch } from 'react-icons/ai';
 
@@ -29,19 +31,15 @@ export const Hosts = () => {
         }
     };
 
-    const handleSearchChange = (e) => {
-        const value = e.target.value;
-        console.log(value);
+    const handleSearch = (value) => {
         fetch(import.meta.env.VITE_API_URI + '/hosts?search=' + value)
             .then(response => response.json())
             .then(data => {
-                setHosts(data)
-                console.log(data);
+                setHosts(data);
             })
             .catch(err => console.error(err));
     };
     
-
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openNewHost = () => {
@@ -60,46 +58,32 @@ export const Hosts = () => {
     };
 
     return (
-        <Container>
-            {/* <DndContext 
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-            > */}
-{/*                 <SortableContext 
-                    items={hosts.map(host => host._id)} 
-                    strategy={verticalListSortingStrategy}
-                    > */}
-                    <div className="filter">
-                        <AiOutlineSearch className= "search_icon" size={20} />
-                        <input type="text" placeholder="Buscar..." onChange={handleSearchChange} />
-                    </div>
+        <Layout 
+            page={'Hosts'}
+            headerContent={<SearchBar onSearch={handleSearch} />}
+        >
+            <Container>
                     <div className='hosts'>
                         {hosts.map(host => (
                         <Host key={host._id} {...host} refresh={refresh}/>
                         ))}
                     </div>
-
-                {/* </SortableContext> */}
-            {/* </DndContext> */}
-            {isModalOpen && (
-                <NewHost2 
-                    className="nHost" 
-                    isOpen={isModalOpen} 
-                    onClose={closeNewHost} 
-                    refresh={refresh}
-                /> 
-            )}
-
-            <button className="addHostBt"
-            onClick={openNewHost}>+</button>
-        </Container>
+                {isModalOpen && (
+                    <NewHost2 
+                        className="nHost" 
+                        isOpen={isModalOpen} 
+                        onClose={closeNewHost} 
+                        refresh={refresh}
+                    /> 
+                )}
+                <button className="addHostBt"
+                onClick={openNewHost}>+</button>
+            </Container>
+        </Layout>
     );
 }
 const Container = styled.div`
 
-    position: relative;
-    padding-top: 40px;
-    height: 100%;
     .Host {
         margin-bottom: 10px;
     }
@@ -141,8 +125,6 @@ const Container = styled.div`
     .hosts {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
         margin-top: 10px;
         height: 100%;
     }

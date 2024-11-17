@@ -62,8 +62,6 @@ const Switch = ({ _id, name, description, brand, nports, nconnections, refresh }
           initialData={{ _id, name, description, brand, nports, nconnections }}
         />
       )}
-
-
     </SwitchContainer>
   );
 };

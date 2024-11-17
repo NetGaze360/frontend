@@ -23,14 +23,9 @@ function App() {
         <BrowserRouter>
           <Container className={sidebarOpen?"sidebarState active":""}>
             <Sidebar sidebarOpen = {sidebarOpen} setSidebarOpen={setSidebarOpen} setPage = {setPage}/>   
-            <div className='content'>
-              <div className='header'>
-                <h1>{page}</h1>
-              </div>
-              <div className='body'>
+  
                 <MyRoutes setPage = {setPage}/>
-              </div>
-            </div>
+
           </Container>
         </BrowserRouter>
       </ThemeProvider>
@@ -57,6 +52,8 @@ const Container = styled.div`
   .content{
     margin-bottom: 500px;
     height: 100%;
+    overflow-y: hidden;
+    margin-left: 30px;
   }
 
   .header{
@@ -69,13 +66,6 @@ const Container = styled.div`
     margin-bottom: 10px;
     margin-top: 10px;
     border-bottom: 1px solid ${(props)=>props.theme.bg3};
-  }
-
-  .body{
-    margin-left: 30px;
-    overflow-y: auto;
-    height: 100%;
-    max-height: calc(100vh - 50px); /* Ajusta esta altura según tus necesidades */
   }
 `;
 

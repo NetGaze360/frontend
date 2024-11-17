@@ -70,7 +70,6 @@ return (
             {sidebarOpen && <span className='titletheme'>Dark mode</span>}
             <div className="Togglecontent">
                 <div className="grid theme-container">
-                    <div className="content">
                         <div className="demo">
                             <label className='switch' istheme={theme}>
                                 <input 
@@ -82,7 +81,6 @@ return (
                                 <span istheme={theme} className='slider round'></span>
                             </label>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -157,6 +155,7 @@ const Container = styled.div`
         padding: 0;
         font-family: inherit;
         outline: none;
+        z-index: 0;
     }
     .Logocontent{
         display: flex;

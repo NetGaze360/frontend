@@ -4,6 +4,7 @@ import Switch from '../components/Switch';
 import { DndContext, closestCenter} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import NewSwitch from '../components/NewSwitch';
+import Layout from '../components/Layout';
 import { CSS } from '@dnd-kit/utilities'
 import { Link } from 'react-router-dom';
 
@@ -36,31 +37,31 @@ export const Switches = () => {
     };
 
     return (
-        <Container>
-            {switches.map(switchItem => (
-                <Link to={`/switches/${switchItem._id}`} key={switchItem._id} >
-                    <Switch key={switchItem._id} {...switchItem} refresh={refresh}/>
-                </Link>
-            ))}
-            {isModalOpen && (
-                <NewSwitch
-                    className="nSwitch" 
-                    isOpen={isModalOpen} 
-                    onClose={closeNewSwitch} 
-                    refresh={refresh}
-                /> 
-            )}
-
-            <button className="addSwitchBt"
-            onClick={openNewSwitch}>+</button>
-        </Container>
+        <Layout
+            page="Switches"
+        >
+            <Container>
+                {switches.map(switchItem => (
+                    <Link to={`/switches/${switchItem._id}`} key={switchItem._id} >
+                        <Switch key={switchItem._id} {...switchItem} refresh={refresh}/>
+                    </Link>
+                ))}
+                {isModalOpen && (
+                    <NewSwitch
+                        className="nSwitch" 
+                        isOpen={isModalOpen} 
+                        onClose={closeNewSwitch} 
+                        refresh={refresh}
+                    /> 
+                )}
+                <button className="addSwitchBt"
+                onClick={openNewSwitch}>+</button>
+            </Container>
+        </Layout>
     );
 }
 const Container = styled.div`
 
-    .Host {
-        margin-bottom: 10px;
-    }
     .addSwitchBt {
         top: 92%;
         left: 95%;
