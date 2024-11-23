@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { Connection} from '../components/Connection';
+import NewConnection from '../components/NewConnection';
 import Layout from '../components/Layout';
 import { useEffect, useState } from 'react';
 
@@ -10,12 +11,20 @@ export function SwitchLayout({setPage}){
     const [switchInfo, setSwitchInfo] = useState({});
     const [evenConns, setEvenConns] = useState([]);
     const [oddConns, setOddConns] = useState([]);
+    const [isNewConnectionOpen, setIsNewConnectionOpen] = useState(false);
+    const [newConn, setNewConn] = useState({});
 
     useEffect(() => {
         //getSwitchInfo();
         getConns();
         getSwitchInfo();
-    }, []);
+    }, [id]);
+
+    useEffect(() => {
+        if (switchInfo.name) {
+            setPage(switchInfo.name);
+        }
+    }, [switchInfo.name, setPage]);
 
     const getSwitchInfo = () => {
         fetch(import.meta.env.VITE_API_URI + '/switches/' + id)
@@ -39,6 +48,15 @@ export function SwitchLayout({setPage}){
             .catch(err => console.error(err));
     };
 
+    const openNewConnection = (conn) => {
+        setIsNewConnectionOpen(true);
+        setNewConn(conn);
+    }
+
+    const closeNewConnection = () => {
+        setIsNewConnectionOpen(false);
+    }
+
     return (
         <Layout
             page={switchInfo.name}
@@ -48,18 +66,17 @@ export function SwitchLayout({setPage}){
                 {dataLoaded ? (
                     <>
                     {/* Muestra las conexiones */}
-                    { setPage(switchInfo.name)}
                     <div className="conns">
                         <div className="connections-even">
                             {evenConns && evenConns.map(evenConn => (
-                                <div key={evenConn.swPort}>
+                                <div key={evenConn.swPort} onClick={() => openNewConnection(evenConn)}>
                                     <Connection connection={evenConn} />
                                 </div>
                             ))}
                         </div>
                         <div className="connections-odd">
                             {oddConns && oddConns.map(oddConn => (
-                                <div key={oddConn.swPort}>
+                                <div key={oddConn.swPort} onClick={() => openNewConnection(oddConn)}>
                                     <Connection connection={oddConn} />
                                 </div>
                             ))}
@@ -68,6 +85,14 @@ export function SwitchLayout({setPage}){
                     </>
                 ) : (
                     <h1>Cargando...</h1>
+                )}
+                {isNewConnectionOpen && (
+                    <NewConnection
+                        isOpen={isNewConnectionOpen}
+                        onClose={closeNewConnection}
+                        refresh={getConns}
+                        conn={newConn}
+                    />
                 )}
             </Container>
         </Layout>
@@ -99,4 +124,5 @@ const Container = styled.div`
         justify-content: space-between;  
         height: 100%;
         width: 50%;
+    }  
     `;

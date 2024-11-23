@@ -48,6 +48,12 @@ background: ${(props)=>props.theme.bg};
   justify-content: space-between;
   align-items: center;
 }
+
+.connection:hover {
+  background-color: ${(props)=>props.theme.bgHover};
+  cursor: pointer;
+}
+
 .oddCol {
   margin-right: 5px;
   margin-left: 5px;

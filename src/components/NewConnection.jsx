@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';// Asegúrate de tener tu archivo de estilos
 
-function DraggableDiv({isOpen, onClose, refresh, initialData}) {
+function NewConnection({isOpen, onClose, refresh, conn}) {
 
   const [isVisible, setIsVisible] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -24,17 +24,12 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
     setIsVisible(true);
 
     // Establece los valores iniciales de los campos del formulario al editar
-    if (initialData) {
+    if (conn) {
       setIsEditing(true);
-      document.getElementById('number').value = initialData.number;
-      document.getElementById('name').value = initialData.name;
-      document.getElementById('description').value = initialData.description;
-      document.getElementById('brand').value = initialData.brand;
-      document.getElementById('nports').value = initialData.nports;
-      document.getElementById('nconnections').value = initialData.nconnections;
+      document.getElementById('name').value = conn.switch_number;
     }
 
-  }, [initialData]);
+  }, [conn]);
 
   function handleDrag(event) {
     if (dragging) {
@@ -46,23 +41,38 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
     }
   }
 
-  const handleCreateSwitch = () => {
-    const newSwitchData = {
-      number: parseInt(document.getElementById('number').value),
-      name: document.getElementById('name').value,
+  useEffect(() => {
+    if (dragging) {
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+  
+    return () => window.removeEventListener('mouseup', handleMouseUp);
+  }, [dragging]);
+
+  function handleMouseUp() {
+    setDragging(false);
+  }
+
+  const handleCreateHost = () => {
+    const newHostData = {
+      hostname: document.getElementById('name').value,
+      ip: document.getElementById('ip').value,
       description: document.getElementById('description').value,
       brand: document.getElementById('brand').value,
-      nports: parseInt(document.getElementById('nports').value),
-      nconnections: parseInt(document.getElementById('nconnections').value),
+      model: document.getElementById('model').value,
+      serial: document.getElementById('serial').value,
+      location: document.getElementById('location').value,
     };
-
+  
     if (isEditing) {
-      fetch(import.meta.env.VITE_API_URI + '/switches/' + initialData._id, {
+      fetch(import.meta.env.VITE_API_URI + '/hosts/' + conn.switch_number, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newSwitchData),
+        body: JSON.stringify(newHostData),
       })
         .then(response => response.json())
         .then(data => {
@@ -72,12 +82,12 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
         })
         .catch(err => console.error(err));
     } else {
-      fetch(import.meta.env.VITE_API_URI + '/switches', {
+      fetch(import.meta.env.VITE_API_URI + '/hosts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newSwitchData),
+        body: JSON.stringify(newHostData),
       })
         .then(response => response.json())
         .then(data => {
@@ -102,36 +112,35 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
         className={dragging ? 'active' : ''}
         onMouseDown={() => setDragging(true)}
         onMouseMove={handleDrag}
-        onMouseUp={() => setDragging(false)}
       >
-        Switch
+        Add Host
       </header>
       <form>
         <div className="form-group">
-          <label htmlFor="number">Number</label>
-          <input type="number" id="number" placeholder="Number" />
-
-          <label htmlFor="name">Name</label>
+          <label htmlFor="switch">Switch</label>
           <input type="text" id="name" placeholder="Name" />
+
+          <label htmlFor="ip">IP</label>
+          <input type="text" id="ip" placeholder="IP" />
 
           <label htmlFor="description">Description</label>
           <input type="text" id="description" placeholder="Description" />
 
-          <label htmlFor="area_code">Area</label>
-          <input type="number" id="area_code" placeholder="Area" />
-
           <label htmlFor="brand">Brand</label>
           <input type="text" id="brand" placeholder="Brand" />
 
-          <label htmlFor="nports">Ports</label>
-          <input type="number" id="nports" placeholder="Number of Ports" />
+          <label htmlFor="model">Model</label>
+          <input type="text" id="model" placeholder="Model" />
 
-          <label htmlFor="nconnections">Number of Connections</label>
-          <input type="number" id="nconnections" placeholder="Number of Connections" />
+          <label htmlFor="serial">Serial</label>
+          <input type="text" id="serial" placeholder="Serial" />
+          
+          <label htmlFor="location">Location</label>
+          <input type="text" id="location" placeholder="Location" />
         </div>
       </form>
       <div className='btDiv'>
-        <button id='btAccept' onClick={handleCreateSwitch}>Aceptar</button>
+        <button id='btAccept' onClick={handleCreateHost}>Aceptar</button>
         <button id='btCancel' className="modal-cancel-button" onClick={onClose}>
           Cancelar
         </button>
@@ -140,7 +149,7 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
   );
 }
 
-export default DraggableDiv;
+export default NewConnection;
 
 const Container = styled.div`
     place-items: center;
@@ -161,11 +170,11 @@ const Container = styled.div`
       font-weight: 500;
       padding: 17px 30px;
       border-bottom: 1px solid #ccc;
-      cursor: pointer;
+      cursor: grab;
     }
 
     header.active{
-      cursor: move;
+      cursor: grabbing;
       user-select: none;
     }
 

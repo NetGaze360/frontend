@@ -104,7 +104,7 @@ const Container = styled.div`
         box-shadow: 10px 10px 15px rgba(0,0,0,0.4);
     }
     .addHostBt:hover {
-        background-color: rgba(47, 76, 204, 0.4);;
+        background-color: rgba(47, 76, 204, 0.4);
     }
 
     .filter {
