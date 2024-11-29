@@ -149,7 +149,7 @@ const Container = styled.div`
         transform: ${({$isOpen}) => ($isOpen ? 'initial' : 'rotate(180deg)')};
         border: none;
         letter-spacing: inherit;
-        color: inherit;
+        color: ${(props)=>props.theme.primary};
         font-size: inherit;
         text-align: inherit;
         padding: 0;
@@ -157,6 +157,10 @@ const Container = styled.div`
         outline: none;
         z-index: 0;
     }
+    .Sidebarbutton:hover{
+        background: ${(props)=>props.theme.bgtderechaHover};
+    }
+
     .Logocontent{
         display: flex;
         justify-content: center;
