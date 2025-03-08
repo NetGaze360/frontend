@@ -20,10 +20,11 @@ const Layout = ({ children, page, headerContent }) => {
 };
 
 const HeaderContainer = styled.div`
+  height: 5%;
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: ${({theme}) => theme.bgtotal};
+  background-color: ${({theme}) => theme.bg1};
   color: ${({theme}) => theme.text};
   margin-left: 30px;
   margin-bottom: 10px;
@@ -38,12 +39,10 @@ const HeaderContainer = styled.div`
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: ${({theme})=>theme.bgtotal};
     color: ${(props)=>props.theme.text};
     margin-left: 30px;
     margin-bottom: 10px;
     margin-top: 10px;
-    border-bottom: 1px solid ${(props)=>props.theme.bg3};
   }
     
 `;

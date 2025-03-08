@@ -9,8 +9,16 @@ import SearchBar from '../components/SearchBar';
 import { CSS } from '@dnd-kit/utilities'
 import { AiOutlineSearch } from 'react-icons/ai';
 
-export const Hosts = () => {
+export const Hosts = ({mode, onHostSelect}) => {
     const [hosts, setHosts] = useState([]);
+    const [currentMode, setCurrentMode] = useState(mode || 'edit');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (mode) {
+            setCurrentMode(mode);
+        }
+    }, [mode]);
 
     useEffect(() => {
         console.log(import.meta.env.VITE_API_URI);
@@ -18,7 +26,7 @@ export const Hosts = () => {
             .then(response => response.json())
             .then(data => setHosts(data))
             .catch(err => console.error(err));
-    }, []); // El array vacío significa que este efecto se ejecutará sólo una vez, justo después de que el componente se monte
+    }, []);
 
     const handleDragEnd = (event) => {
         const {over, active} = event;
@@ -39,8 +47,12 @@ export const Hosts = () => {
             })
             .catch(err => console.error(err));
     };
-    
-    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleHostClick = (hostId) => {
+        if (currentMode === 'pick' && onHostSelect) {
+            onHostSelect(hostId);
+        }
+    };
 
     const openNewHost = () => {
         setIsModalOpen(true);
@@ -62,30 +74,47 @@ export const Hosts = () => {
             page={'Hosts'}
             headerContent={<SearchBar onSearch={handleSearch} />}
         >
-            <Container>
+            <Container mode={currentMode}>
                     <div className='hosts'>
                         {hosts.map(host => (
-                        <Host key={host._id} {...host} refresh={refresh}/>
+                            <div 
+                                key={host._id}
+                                onClick={() => handleHostClick(host)}
+                                className={currentMode === 'pick' ? 'host_clickable' : ''}
+                            >
+                                <Host {...host} refresh={refresh} mode={currentMode}/>
+                            </div>
                         ))}
                     </div>
-                {isModalOpen && (
-                    <NewHost2 
-                        className="nHost" 
-                        isOpen={isModalOpen} 
-                        onClose={closeNewHost} 
-                        refresh={refresh}
-                    /> 
-                )}
-                <button className="addHostBt"
-                onClick={openNewHost}>+</button>
+                    {currentMode === 'edit' && (
+                        <>
+                            {isModalOpen && (
+                                <NewHost2 
+                                    className="nHost" 
+                                    isOpen={isModalOpen} 
+                                    onClose={closeNewHost} 
+                                    refresh={refresh}
+                                /> 
+                            )}
+                            <button className="addHostBt" onClick={openNewHost}>+</button>
+                        </>
+                    )}
             </Container>
         </Layout>
     );
 }
 const Container = styled.div`
-
+    height: 100%;
+    overflow: hidden;
     .Host {
         margin-bottom: 10px;
+    }
+
+    .host_clickable {
+        cursor: pointer;
+        &:hover {
+            opacity: 0.8;
+        }
     }
 
     .addHostBt {
@@ -122,10 +151,12 @@ const Container = styled.div`
             margin-right: 5px;
         }
     }
+
     .hosts {
         display: flex;
         flex-direction: column;
         margin-top: 10px;
-        height: 100%;
+        height: 90%;
+        overflow-y: auto;
     }
 `;

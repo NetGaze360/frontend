@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styled from 'styled-components';// Asegúrate de tener tu archivo de estilos
+import styled from 'styled-components';
+import { FiX, FiServer, FiHash, FiInfo, FiBox, FiTag, FiCpu, FiMapPin } from 'react-icons/fi';
 
 function DraggableDiv({isOpen, onClose, refresh, initialData}) {
-
   const [isVisible, setIsVisible] = useState(false);
   const [dragging, setDragging] = useState(false);
   const containerRef = useRef(null);
@@ -10,20 +10,13 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // Calcular las dimensiones de la ventana
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-
-    // Calcular la posición inicial para que esté en el centro
     const initialLeft = (windowWidth - containerRef.current.offsetWidth) / 2;
     const initialTop = (windowHeight - containerRef.current.offsetHeight) / 2;
-
-    // Establecer la posición inicial
     setPosition({ left: initialLeft, top: initialTop });
-
     setIsVisible(true);
 
-    // Establece los valores iniciales de los campos del formulario al editar
     if (initialData) {
       setIsEditing(true);
       document.getElementById('name').value = initialData.hostname;
@@ -31,7 +24,6 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
       document.getElementById('description').value = initialData.description;
       document.getElementById('brand').value = initialData.brand;
     }
-
   }, [initialData]);
 
   function handleDrag(event) {
@@ -50,7 +42,6 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
     } else {
       window.removeEventListener('mouseup', handleMouseUp);
     }
-  
     return () => window.removeEventListener('mouseup', handleMouseUp);
   }, [dragging]);
 
@@ -69,37 +60,24 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
       location: document.getElementById('location').value,
     };
   
-    if (isEditing) {
-      fetch(import.meta.env.VITE_API_URI + '/hosts/' + initialData._id, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newHostData),
+    const url = isEditing 
+      ? `${import.meta.env.VITE_API_URI}/hosts/${initialData._id}`
+      : `${import.meta.env.VITE_API_URI}/hosts`;
+
+    fetch(url, {
+      method: isEditing ? 'PUT' : 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newHostData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        onClose();
+        refresh();
       })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          onClose();
-          refresh();
-        })
-        .catch(err => console.error(err));
-    } else {
-      fetch(import.meta.env.VITE_API_URI + '/hosts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newHostData),
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          onClose();
-          refresh();
-        })
-        .catch(err => console.error(err));
-    }
+      .catch(err => console.error(err));
   };
 
   return (
@@ -109,144 +87,245 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
         left: `${position.left}px`, 
         top: `${position.top}px`,
         visibility: isVisible ? 'visible' : 'hidden'
-    }}
+      }}
     >
       <header
         className={dragging ? 'active' : ''}
         onMouseDown={() => setDragging(true)}
         onMouseMove={handleDrag}
       >
-        Add Host
-      </header>
-      <form>
-        <div className="form-group">
-          <label htmlFor="hostname">Hostname</label>
-          <input type="text" id="name" placeholder="Name" />
-
-          <label htmlFor="ip">IP</label>
-          <input type="text" id="ip" placeholder="IP" />
-
-          <label htmlFor="description">Description</label>
-          <input type="text" id="description" placeholder="Description" />
-
-          <label htmlFor="brand">Brand</label>
-          <input type="text" id="brand" placeholder="Brand" />
-
-          <label htmlFor="model">Model</label>
-          <input type="text" id="model" placeholder="Model" />
-
-          <label htmlFor="serial">Serial</label>
-          <input type="text" id="serial" placeholder="Serial" />
-          
-          <label htmlFor="location">Location</label>
-          <input type="text" id="location" placeholder="Location" />
+        <div className="header-content">
+          <FiServer className="header-icon" />
+          <h2>{isEditing ? 'Edit Host' : 'Add Host'}</h2>
         </div>
-      </form>
-      <div className='btDiv'>
-        <button id='btAccept' onClick={handleCreateHost}>Aceptar</button>
-        <button id='btCancel' className="modal-cancel-button" onClick={onClose}>
-          Cancelar
+        <button className="close-button" onClick={onClose}>
+          <FiX />
         </button>
-      </div>
+      </header>
+
+      <FormContent>
+        <div className="form-group">
+          <div className="input-group">
+            <FiServer className="field-icon" />
+            <div className="input-wrapper">
+              <label htmlFor="name">Hostname</label>
+              <input type="text" id="name" placeholder="Enter hostname" />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <FiHash className="field-icon" />
+            <div className="input-wrapper">
+              <label htmlFor="ip">IP Address</label>
+              <input type="text" id="ip" placeholder="Enter IP address" />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <FiInfo className="field-icon" />
+            <div className="input-wrapper">
+              <label htmlFor="description">Description</label>
+              <input type="text" id="description" placeholder="Enter description" />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <FiBox className="field-icon" />
+            <div className="input-wrapper">
+              <label htmlFor="brand">Brand</label>
+              <input type="text" id="brand" placeholder="Enter brand" />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <FiTag className="field-icon" />
+            <div className="input-wrapper">
+              <label htmlFor="model">Model</label>
+              <input type="text" id="model" placeholder="Enter model" />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <FiCpu className="field-icon" />
+            <div className="input-wrapper">
+              <label htmlFor="serial">Serial</label>
+              <input type="text" id="serial" placeholder="Enter serial number" />
+            </div>
+          </div>
+
+          <div className="input-group">
+            <FiMapPin className="field-icon" />
+            <div className="input-wrapper">
+              <label htmlFor="location">Location</label>
+              <input type="text" id="location" placeholder="Enter location" />
+            </div>
+          </div>
+        </div>
+      </FormContent>
+
+      <Footer>
+        <button className="cancel-button" onClick={onClose}>
+          Cancel
+        </button>
+        <button className="submit-button" onClick={handleCreateHost}>
+          {isEditing ? 'Update' : 'Create'}
+        </button>
+      </Footer>
     </Container>
-  );
+);
 }
 
-export default DraggableDiv;
-
 const Container = styled.div`
-    place-items: center;
-    position: absolute;
-    width: 300px;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    background-color: ${(props)=>props.theme.bg};    
-    color: ${(props)=>props.theme.text};
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    box-shadow: 10px 10px 15px rgba(0,0,0,0.1);
-    overflow: auto;
+  position: absolute;
+  width: 420px;
+  background: ${props => props.theme.bg};
+  color: ${props => props.theme.text};
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
 
-    header{
-      font-size: 23px;
-      font-weight: 500;
-      padding: 17px 30px;
-      border-bottom: 1px solid #ccc;
-      cursor: grab;
-    }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: ${props => props.theme.bg};
+    border-bottom: 1px solid ${props => props.theme.gray600}33;
+    cursor: grab;
 
-    header.active{
+    &.active {
       cursor: grabbing;
-      user-select: none;
     }
 
-    form{
+    .header-content {
       display: flex;
-      margin-left: 20px;
-      margin-top: 10px;
-      margin-bottom: 35px;
-    }
-  
-
-    .form-group{
-      justify-content: ;
       align-items: center;
+      gap: 12px;
 
+      .header-icon {
+        font-size: 1.5rem;
+        color: ${props => props.theme.netgaze};
+      }
 
+      h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
     }
 
-    .form-group label{
-      width: 50%;
-      display: block;
-      margin-bottom: 5px;
-      margin-left: 10px;
-      border-radius: 4px;
-    }
-    .form-group input {
-      width: 100%;
-      display: block;
-      margin-bottom: 5px;
-      margin-left: 10px;
-      border-radius: 4px;
-    }
-
-    .btDiv{
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    button{
-      width: auto;
-      text-align: center;
-      line-height: 30px;
-      font-size: 15px;
-      padding: 0 10px;
-      height: 30px;
-      border-radius: 4px;
+    .close-button {
+      background: none;
       border: none;
+      color: ${props => props.theme.text};
       cursor: pointer;
-    }
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s;
 
-    #btAccept{
-      background-color: #4CAF50;
-      color: white;
+      &:hover {
+        background: ${props => props.theme.gray600}22;
+      }
     }
-
-    #btAccept:hover{
-      background-color: #45a049;
-    }
-
-    #btCancel{
-      background-color: #f44336;
-      color: white;
-    }
-
-    #btCancel:hover{
-      background-color: #da190b;
-    }
-
-    
+  }
 `;
+
+const FormContent = styled.div`
+  padding: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .field-icon {
+      width: 16px;
+      height: 16px;
+      color: ${props => props.theme.netgaze};
+      opacity: 0.8;
+      margin-top: 8px; // Ajustado para alinear con el input
+    }
+
+    .input-wrapper {
+      flex: 1;
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.875rem;
+        color: ${props => props.theme.text}cc;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid ${props => props.theme.gray600}66;
+        border-radius: 6px;
+        background: ${props => props.theme.bg};
+        color: ${props => props.theme.text};
+        font-size: 0.95rem;
+        transition: all 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: ${props => props.theme.netgaze};
+          box-shadow: 0 0 0 2px ${props => props.theme.netgaze}22;
+        }
+
+        &::placeholder {
+          color: ${props => props.theme.text}66;
+        }
+      }
+    }
+  }
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid ${props => props.theme.gray600}33;
+
+  button {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &.cancel-button {
+      color: ${props => props.theme.text};
+      background: transparent;
+      border: 1px solid ${props => props.theme.gray600}66;
+
+      &:hover {
+        background: ${props => props.theme.gray600}22;
+      }
+    }
+
+    &.submit-button {
+      color: white;
+      background: ${props => props.theme.netgaze};
+      border: none;
+
+      &:hover {
+        filter: brightness(1.1);
+      }
+    }
+  }
+`;
+
+export default DraggableDiv;

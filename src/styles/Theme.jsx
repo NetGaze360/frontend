@@ -24,6 +24,7 @@ export const Light ={
     bg4:"#9247FC",
     bgtotal:"#EDF3FB",
     bgtgderecha:"#fff",
+    bgtderechaHover:"#e1e1e1",
     barrascroll: "#a8a7a7",
 
     mediapro: "#E43D30",
@@ -78,6 +79,8 @@ export const Dark = {
     primary: "rgb(52, 131, 235)",
     bg4:"#9247FC",
     bgtotal:"#21252B",
+    bgtgderecha:"#fff",
+    bgtderechaHover:"#e1e1e1",
     barrascroll: "#A18AFF",
 
     netgaze: "#2f4ccc",

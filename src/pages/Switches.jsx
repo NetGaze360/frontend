@@ -10,16 +10,15 @@ import { Link } from 'react-router-dom';
 
 export const Switches = () => {
     const [switches, setSwitches] = useState([]);
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
     useEffect(() => {
         console.log(import.meta.env.VITE_API_URI);
         refresh();
         switches.forEach((switchItem, index) => {
             console.log(switchItem.nports);
         });
-    }, []); // El array vacío significa que este efecto se ejecutará sólo una vez, justo después de que el componente se monte
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    }, []);
 
     const openNewSwitch = () => {
         setIsModalOpen(true);
