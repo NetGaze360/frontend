@@ -7,6 +7,7 @@ import Layout from '../components/Layout';
 import FloatingLayout from '../components/FloatingLayout';
 import { useEffect, useState } from 'react';
 import { FiHardDrive, FiLoader } from 'react-icons/fi';
+import { http } from '../utils/httpService';
 
 export function SwitchLayout({setPage}){
     const { id } = useParams();
@@ -28,40 +29,41 @@ export function SwitchLayout({setPage}){
         }
     }, [switchInfo.name, setPage]);
 
-    const getSwitchInfo = () => {
-        fetch(import.meta.env.VITE_API_URI + '/switches/' + id)
-            .then(response => response.json())
-            .then(data => {
-                setSwitchInfo(data)
-            })
-            .catch(err => console.error(err));
+    const getSwitchInfo = async () => {
+        try {
+            const response = await http.get('/switches/' + id);
+            if (response.ok) {
+                const data = await response.json();
+                setSwitchInfo(data);
+            }
+        } catch (error) {
+            console.error('Error al obtener la información del switch:', error);
+        }
     };
 
-    const getConns = () => {
-        fetch(import.meta.env.VITE_API_URI + '/conns/' + id)
-            .then(response => response.json())
-            .then(data => {
-                setEvenConns(data.evenConns)
-                setOddConns(data.oddConns)
-                setDataLoaded(true)
-            })
-            .catch(err => console.error(err));
+    const getConns = async () => {
+        try {
+            const response = await http.get('/conns/' + id);
+            if (response.ok) {
+                const data = await response.json();
+                setEvenConns(data.evenConns);
+                setOddConns(data.oddConns);
+                setDataLoaded(true);
+            }
+        } catch (error) {
+            console.error('Error al obtener las conexiones:', error);
+        }
     };
 
-    const createConn = (conn) => {
-        fetch(import.meta.env.VITE_API_URI + '/conns', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(conn)
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
+    const createConn = async (conn) => {
+        try {
+            const response = await http.post('/conns', conn);
+            if (response.ok) {
                 getConns();
-            })
-            .catch(err => console.error(err));
+            }
+        } catch (error) {
+            console.error('Error al crear la conexión:', error);
+        }
     };
 
     const openNewConnection = (conn) => {

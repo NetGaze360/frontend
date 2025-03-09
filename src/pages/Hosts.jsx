@@ -8,6 +8,7 @@ import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import { CSS } from '@dnd-kit/utilities'
 import { AiOutlineSearch } from 'react-icons/ai';
+import { http } from '../utils/httpService';
 
 export const Hosts = ({mode, onHostSelect}) => {
     const [hosts, setHosts] = useState([]);
@@ -20,12 +21,9 @@ export const Hosts = ({mode, onHostSelect}) => {
         }
     }, [mode]);
 
-    useEffect(() => {
+    useEffect( () => {
         console.log(import.meta.env.VITE_API_URI);
-        fetch(import.meta.env.VITE_API_URI + '/hosts')
-            .then(response => response.json())
-            .then(data => setHosts(data))
-            .catch(err => console.error(err));
+        refresh();
     }, []);
 
     const handleDragEnd = (event) => {
@@ -62,11 +60,17 @@ export const Hosts = ({mode, onHostSelect}) => {
         setIsModalOpen(false);
     };
 
-    const refresh = () => {
-        fetch(import.meta.env.VITE_API_URI + '/hosts')
-            .then(response => response.json())
-            .then(data => setHosts(data))
-            .catch(err => console.error(err));
+    const refresh = async () => {
+        try {
+            const response = await http.get('/hosts');
+            if (response.ok) {
+                const data = await response.json();
+                setHosts(data);
+                console.log(data);
+            }
+        } catch (error) {
+            console.error('Error al cargar los hosts:', error);
+        }
     };
 
     return (

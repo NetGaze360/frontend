@@ -7,6 +7,7 @@ import NewSwitch from '../components/NewSwitch';
 import Layout from '../components/Layout';
 import { CSS } from '@dnd-kit/utilities'
 import { Link } from 'react-router-dom';
+import { http } from '../utils/httpService';
 
 export const Switches = () => {
     const [switches, setSwitches] = useState([]);
@@ -28,11 +29,16 @@ export const Switches = () => {
         setIsModalOpen(false);
     };
 
-    const refresh = () => {
-        fetch(import.meta.env.VITE_API_URI + '/switches')
-            .then(response => response.json())
-            .then(data => setSwitches(data))
-            .catch(err => console.error(err));
+    const refresh = async() => {
+        try {
+            const response = await http.get('/switches');
+            if (response.ok) {
+                const data = await response.json();
+                setSwitches(data);
+            }
+        } catch (error) {
+            console.error('Error al obtener los switches:', error);
+        }
     };
 
     return (
@@ -76,7 +82,7 @@ const Container = styled.div`
         cursor: pointer;
         box-shadow: 10px 10px 15px rgba(0,0,0,0.4);
     }
-    .addSwitchtBt:hover {
+    .addSwitchBt:hover {
         background-color: rgba(47, 76, 204, 0.4);;
     }
 

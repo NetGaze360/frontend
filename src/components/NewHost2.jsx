@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { FiX, FiServer, FiHash, FiInfo, FiBox, FiTag, FiCpu, FiMapPin } from 'react-icons/fi';
+import { http } from '../utils/httpService';
 
 function DraggableDiv({isOpen, onClose, refresh, initialData}) {
   const [isVisible, setIsVisible] = useState(false);
@@ -49,7 +50,7 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
     setDragging(false);
   }
 
-  const handleCreateHost = () => {
+  const handleCreateHost = async () => {
     const newHostData = {
       hostname: document.getElementById('name').value,
       ip: document.getElementById('ip').value,
@@ -60,24 +61,24 @@ function DraggableDiv({isOpen, onClose, refresh, initialData}) {
       location: document.getElementById('location').value,
     };
   
-    const url = isEditing 
-      ? `${import.meta.env.VITE_API_URI}/hosts/${initialData._id}`
-      : `${import.meta.env.VITE_API_URI}/hosts`;
-
-    fetch(url, {
-      method: isEditing ? 'PUT' : 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newHostData),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        onClose();
-        refresh();
-      })
-      .catch(err => console.error(err));
+    try {
+      let response;
+      
+      if (isEditing) {
+        // Para editar un host existente
+        response = await http.put(`/hosts/${initialData._id}`, newHostData);
+      } else {
+        // Para crear un nuevo host
+        response = await http.post('/hosts', newHostData);
+      }
+      
+      const data = await response.json();
+      console.log(data);
+      onClose();
+      refresh();
+    } catch (err) {
+      console.error('Error al guardar el host:', err);
+    }
   };
 
   return (

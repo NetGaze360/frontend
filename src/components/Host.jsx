@@ -7,6 +7,7 @@ import { BiEdit } from 'react-icons/bi';
 import { FiServer, FiInfo, FiHash } from 'react-icons/fi';
 import { useState, useEffect } from 'react';
 import NewHost2 from '../components/NewHost2';
+import { http } from '../utils/httpService';
 
 const Host = ({ _id, hostname, ip, description, brand, mode, refresh }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({id: _id});
@@ -29,16 +30,14 @@ const Host = ({ _id, hostname, ip, description, brand, mode, refresh }) => {
   };
   
   const handleDelete = async () => {
-    console.log('deleting host', _id);
-    await fetch(import.meta.env.VITE_API_URI + '/hosts/' + _id, {
-      method: 'DELETE'
-    })
-    // Print response
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-    })
-    await refresh();
+    try {
+      const response = await http.delete('/hosts/' + _id);
+      if (response.ok) {
+        refresh();
+      }
+    } catch (error) {
+      console.error('Error al eliminar el host:', error);
+    }
   };
 
   return (

@@ -7,8 +7,13 @@ import {FiServer} from 'react-icons/fi';
 import {NavLink, useLocation} from 'react-router-dom';
 import { useContext } from "react";
 import { ThemeContext } from '../App';
+import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export function Sidebar({sidebarOpen, setSidebarOpen, setPage} ){
+
+    const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const ModSidebaropen=() =>{
         setSidebarOpen(!sidebarOpen);
@@ -19,6 +24,28 @@ export function Sidebar({sidebarOpen, setSidebarOpen, setPage} ){
     const CambiarTheme=()=>{
         setTheme((theme)=>(theme === "light" ? "dark" : "light"));
     };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
+    //#region CONFIG LINKS
+    const configLinksArray = [
+        {
+            label: 'Configuración',
+            icon: <AiOutlineSetting/>,
+            to: '/settings',
+        },
+        {
+            label: 'Cerrar Sesión',
+            icon: <MdLogout/>,
+            to: '#',
+            action: handleLogout,
+        },
+    ]
+
+    //#endregion CONFIG LINKS
 
 return (
     <Container $isOpen = {sidebarOpen} $themeUse={theme}>
@@ -51,20 +78,25 @@ return (
                 </div>
             ))}
         <Divider/>
-        {configLinksArray.map(({icon, label, to}) => (
-                <div className='LinkContainer' key={label}>
-                    <NavLink to={to} className = {({isActive}) => `Links${isActive?` active`:``}`}>
+        {configLinksArray.map(({icon, label, to, action}) => (
+            <div className='LinkContainer' key={label}>
+                {action ? (
+                    <button className="Links" onClick={action}>
                         <div className='Linkicon'>
                             {icon}
                         </div>
-                        {
-                            sidebarOpen && (
-                                <span>{label}</span>
-                            )
-                        }
+                        {sidebarOpen && <span>{label}</span>}
+                    </button>
+                ) : (
+                    <NavLink to={to} className={({isActive}) => `Links${isActive?` active`:``}`}>
+                        <div className='Linkicon'>
+                            {icon}
+                        </div>
+                        {sidebarOpen && <span>{label}</span>}
                     </NavLink>
-                </div>
-            ))}
+                )}
+            </div>
+        ))}
         <Divider/>
         <div className='Themecontent'>
             {sidebarOpen && <span className='titletheme'>Dark mode</span>}
@@ -108,22 +140,6 @@ const linksArray = [
 ]
 
 //#endregion LINKS
-
-//#region CONFIG LINKS
-const configLinksArray = [
-    {
-        label: 'Configuración',
-        icon: <AiOutlineSetting/>,
-        to: '/null',
-    },
-    {
-        label: 'Salir',
-        icon: <MdLogout/>,
-        to: '/null',
-    },
-]
-
-//#endregion CONFIG LINKS
 
 //#region STYLED COMPONENTS
 const Container = styled.div`
@@ -195,6 +211,15 @@ const Container = styled.div`
             justify-content: ${({$isOpen}) => ($isOpen ? '' : 'center')};
             text-decoration: none;
             padding: calc(${v.smSpacing} - 2px) 0;
+
+            width: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: inherit;
+            font-family: inherit;
+            text-align: left;
+
             .Linkicon{
                 padding: ${v.smSpacing} ${v.smSpacing};
                 display: flex;
