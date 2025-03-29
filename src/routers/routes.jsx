@@ -5,6 +5,7 @@ import { Switches } from "../pages/Switches";
 import { SwitchLayout } from "../pages/SwitchLayout";
 import Login from "../components/Login";
 import Register from "../components/Register";
+import SystemSettings from "../components/SystemSettings";
 import PrivateRoute from "../components/PrivateRoute";
 import { Sidebar } from "../components/Sidebar";
 import styled from "styled-components";
@@ -35,6 +36,7 @@ export function MyRoutes({ setSidebarOpen, sidebarOpen, setPage }) {
                     <Route path="/hosts" element={<Hosts />} />
                     <Route path="/switches" element={<Switches />} />
                     <Route path="/switches/:id" element={<SwitchLayout setPage={setPage} />} />
+                    <Route path="/settings" element={<SystemSettings />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

@@ -46,17 +46,20 @@ async function fetchWithAuth(url, options = {}) {
     // Realizar la petición
     const response = await fetch(`${API_BASE_URL}${url}`, fetchOptions);
 
-    // Si la respuesta es 401 (Unauthorized), intentar renovar el token
-    if (response.status === 401) {
+    // Si la respuesta es 401 (Unauthorized) o 403 (Forbidden), intentar renovar el token
+    if (response.status === 401 || response.status === 403) {
+      console.log(`Recibido error ${response.status}, intentando renovar token...`);
       const refreshed = await refreshToken();
       
       // Si se pudo renovar el token, reintentar la petición
       if (refreshed) {
+        console.log("Token renovado exitosamente, reintentando petición...");
         const newToken = localStorage.getItem('accessToken');
         fetchOptions.headers.Authorization = `Bearer ${newToken}`;
         return fetch(`${API_BASE_URL}${url}`, fetchOptions);
       } else {
         // Si no se pudo renovar, forzar cierre de sesión
+        console.log("No se pudo renovar el token, redirigiendo a login...");
         logout();
         throw new Error('Sesión expirada. Por favor, inicie sesión nuevamente.');
       }
@@ -76,18 +79,29 @@ async function fetchWithAuth(url, options = {}) {
  */
 async function refreshToken() {
   try {
+    console.log("Intentando renovar token...");
     const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
       method: 'POST',
       credentials: 'include', // Incluir cookies
     });
 
+    console.log("Respuesta del servidor:", response.status);
+    
     if (!response.ok) {
+      console.error("Error en la renovación:", await response.text());
       return false;
     }
 
     const data = await response.json();
-    localStorage.setItem('accessToken', data.accessToken);
-    return true;
+    console.log("Nuevo token recibido:", data.accessToken ? "Sí" : "No");
+    
+    if (data.accessToken) {
+      localStorage.setItem('accessToken', data.accessToken);
+      return true;
+    } else {
+      console.error("No se recibió un nuevo access token");
+      return false;
+    }
   } catch (error) {
     console.error('Error al renovar el token:', error);
     return false;
